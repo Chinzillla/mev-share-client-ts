@@ -1,5 +1,11 @@
 # Flashbots MEV-Share Client
 
+## Upgrades
+
+- The client now uses the built-in `fetch` API instead of `axios`, which removes an extra runtime dependency and its vulnerable transitive `form-data` path.
+- The release tooling has been refreshed to clear the remaining critical advisory in the dependency tree.
+- Use Node.js 18+ when consuming the package, or provide a compatible global `fetch` implementation in older runtimes. Repository tooling follows the Node version pinned in `.nvmrc`.
+
 Client library for MEV-Share written in Typescript.
 
 Based on [MEV-Share Spec](https://github.com/flashbots/mev-share).

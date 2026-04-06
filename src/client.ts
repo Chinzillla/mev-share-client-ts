@@ -1,4 +1,3 @@
-import axios, { AxiosError } from "axios"
 import { Transaction, Wallet } from 'ethers'
 import EventSource from "eventsource"
 import { JsonRpcError, NetworkFailure, UnimplementedStreamEvent } from './error'
@@ -67,10 +66,11 @@ export default class MevShareClient {
      * @returns Response data.
     */
     private async postRpc(url: string, payload: {body?: any, headers?: any}): Promise<any> {
-        const res = await axios.post(url, payload.body, {
-            headers: {...this.network.apiHeaders, ...payload.headers }
-        })
-        const data = res.data as JsonRpcData
+        const data = await this.requestJson(url, {
+            method: "POST",
+            headers: {...this.network.apiHeaders, ...payload.headers },
+            body: JSON.stringify(payload.body),
+        }) as JsonRpcData
         if (data.error) {
             throw new JsonRpcError(data.error)
         }
@@ -83,8 +83,43 @@ export default class MevShareClient {
     private async streamGet(urlSuffix: string): Promise<any> {
         let url = this.network.streamUrl
         url = url.endsWith("/") ? url : url + "/"
-        const res = await axios.get(url + "api/v1/" + urlSuffix)
-        return res.data
+        return await this.requestJson(url + "api/v1/" + urlSuffix)
+    }
+
+    private parseResponseBody(responseText: string, contentType: string | null): any {
+        if (responseText.length === 0) {
+            return undefined
+        }
+
+        if (!contentType?.includes("application/json")) {
+            return responseText
+        }
+
+        try {
+            return JSON.parse(responseText)
+        } catch {
+            return responseText
+        }
+    }
+
+    private async requestJson(url: string, init?: Parameters<typeof fetch>[1]): Promise<any> {
+        try {
+            const response = await fetch(url, init)
+            const responseText = await response.text()
+            const responseBody = this.parseResponseBody(responseText, response.headers.get("content-type"))
+
+            if (!response.ok) {
+                throw NetworkFailure.fromResponse(response.status, responseBody ?? response.statusText)
+            }
+
+            return responseBody
+        } catch (error) {
+            if (error instanceof NetworkFailure) {
+                throw error
+            }
+
+            throw NetworkFailure.fromError(error)
+        }
     }
 
     /**
@@ -94,15 +129,7 @@ export default class MevShareClient {
      * @returns Response data from the API request.
      */
     private async handleApiRequest(params: Array<any>, method: any): Promise<any> {
-        try {
-            return this.postRpc(this.network.apiUrl, await getRpcRequest(params, method, this.authSigner))
-        } catch (e) {
-            if (e instanceof AxiosError) {
-                throw new NetworkFailure(e)
-            } else {
-                throw e
-            }
-        }
+        return await this.postRpc(this.network.apiUrl, await getRpcRequest(params, method, this.authSigner))
     }
 
     /**
@@ -152,15 +179,7 @@ export default class MevShareClient {
             () => { throw new UnimplementedStreamEvent(eventType) }
 
         events.onmessage = (event) => {
-            try {
-                eventHandler(JSON.parse(event.data), callback)
-            } catch (e) {
-                if (e instanceof AxiosError) {
-                    throw new NetworkFailure(e)
-                } else {
-                    throw e
-                }
-            }
+            eventHandler(JSON.parse(event.data), callback)
         }
 
         return events

@@ -2,7 +2,7 @@ import { hexlify, toBigInt, toUtf8Bytes, JsonRpcProvider, TransactionRequest } f
 import { HintPreferences } from '../..'
 import { initExample } from './helpers'
 
-export const setupTxExample = async (provider: JsonRpcProvider, tip?: BigInt, flair?: string) => {
+export const setupTxExample = async (provider: JsonRpcProvider, tip?: bigint, flair?: string) => {
     const { wallet, feeData, mevshare } = await initExample(provider)
     const tipActual = tip ? tip.valueOf() : BigInt(0)
     const tx: TransactionRequest = {
@@ -30,7 +30,7 @@ export const sendTx = async (
     provider: JsonRpcProvider,
     hints?: HintPreferences,
     maxBlockNumber?: number,
-    tip?: BigInt,
+    tip?: bigint,
 ) => {
     const {mevshare, signedTx} = await setupTxExample(provider, tip)
     return await mevshare.sendTransaction(signedTx,

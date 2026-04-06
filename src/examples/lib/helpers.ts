@@ -3,6 +3,7 @@ import MevShareClient from '../..'
 import Env from './env'
 import networks from '../../api/networks'
 
+/** Initializes the shared Sepolia provider used by the examples. */
 export function getProvider() {
     return new JsonRpcProvider(Env.providerUrl, networks.sepolia)
 }

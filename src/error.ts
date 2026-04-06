@@ -1,4 +1,3 @@
-import { AxiosError } from 'axios'
 import { StreamEventType } from './api/interfaces'
 
 class MevShareError extends Error {
@@ -17,10 +16,26 @@ export class JsonRpcError extends MevShareError {
 }
 
 export class NetworkFailure extends MevShareError {
-    constructor(e: AxiosError) {
-        const err = e as AxiosError
-        super(`${err.response?.status}: ${JSON.stringify(err.response?.data)}\n${err.stack}`)
+    constructor(message: string) {
+        super(message)
         this.name = "NetworkFailure"
+    }
+
+    static fromResponse(status: number, responseBody: unknown): NetworkFailure {
+        if (responseBody == null || responseBody === '') {
+            return new NetworkFailure(`${status}`)
+        }
+
+        const details = typeof responseBody === "string" ? responseBody : JSON.stringify(responseBody)
+        return new NetworkFailure(`${status}: ${details}`)
+    }
+
+    static fromError(error: unknown): NetworkFailure {
+        if (error instanceof Error) {
+            return new NetworkFailure(`${error.message}\n${error.stack ?? ''}`.trim())
+        }
+
+        return new NetworkFailure(String(error))
     }
 }
 
