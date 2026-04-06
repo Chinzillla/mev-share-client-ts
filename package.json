@@ -1,9 +1,9 @@
 {
   "name": "@chinzilla/mev-share-client",
-  "version": "0.7.13",
+  "version": "0.0.1",
   "description": "MEV-Share client library for Flashbots mev-share.",
   "main": "build/index.js",
-  "repository": "https://github.com/chinzilla/mev-share-client-ts",
+  "repository": "https://github.com/chinzillla/mev-share-client-ts",
   "author": "chinzillla",
   "publishConfig": {
     "access": "public"
