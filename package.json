@@ -14,7 +14,8 @@
     "eslint/ajv": "6.14.0",
     "@eslint/eslintrc/ajv": "6.14.0",
     "eslint/**/minimatch": "3.1.4",
-    "eslint/**/brace-expansion": "1.1.13"
+    "eslint/**/brace-expansion": "1.1.13",
+    "**/cross-spawn": "7.0.6"
   },
   "devDependencies": {
     "@types/eventsource": "^1.1.11",
