@@ -18,12 +18,14 @@
     "**/cross-spawn": "7.0.6",
     "**/diff": "4.0.4",
     "eslint/**/flatted": "3.4.2",
-    "eslint/**/js-yaml": "4.1.1"
+    "eslint/**/js-yaml": "4.1.1",
+    "**/undici": "6.24.1"
   },
   "overrides": {
     "diff": "4.0.4",
     "flatted": "3.4.2",
-    "js-yaml": "4.1.1"
+    "js-yaml": "4.1.1",
+    "undici": "6.24.1"
   },
   "devDependencies": {
     "@types/eventsource": "^1.1.11",
