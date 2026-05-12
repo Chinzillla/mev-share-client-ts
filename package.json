@@ -20,13 +20,19 @@
     "eslint/**/brace-expansion": "1.1.13",
     "**/cross-spawn": "7.0.6",
     "**/diff": "4.0.4",
+    "**/basic-ftp": "6.0.1",
+    "**/fast-uri": "3.1.2",
     "eslint/**/flatted": "3.4.2",
     "eslint/**/js-yaml": "4.1.1",
+    "**/ip-address": "10.2.0",
     "**/undici": "6.24.1"
   },
   "overrides": {
+    "basic-ftp": "6.0.1",
     "diff": "4.0.4",
+    "fast-uri": "3.1.2",
     "flatted": "3.4.2",
+    "ip-address": "10.2.0",
     "js-yaml": "4.1.1",
     "undici": "6.24.1"
   },
